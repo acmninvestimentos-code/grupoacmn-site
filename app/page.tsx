@@ -1,3 +1,43 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import SplashIntro from "../components/SplashIntro";
+
+export default function Home() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Opcional: só mostra 1x por dia
+  useEffect(() => {
+    const key = "acmn_splash_last";
+    const last = localStorage.getItem(key);
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (last === today) setShowSplash(false);
+    else setShowSplash(true);
+
+    // quando terminar, marca o dia
+    // (isso fica no onDone)
+  }, []);
+
+  const onDone = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem("acmn_splash_last", today);
+    setShowSplash(false);
+
+    // opcional: garantir topo
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <>
+      {showSplash && <SplashIntro onDone={() => setShowSplash(false)} />}
+
+      {/* AQUI entra sua landing 1 página */}
+      <main>{/* ...seu site... */}</main>
+    </>
+  );
+}
+
 export default function Home() {
   const whatsappNumber = "5551991908369";
   const whatsappText =
