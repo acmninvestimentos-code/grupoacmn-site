@@ -1,7 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import SplashIntro from "../components/SplashIntro";
+
+const BRAND = {
+  primary: "bg-[#101828]",
+  primaryHover: "hover:bg-[#0b1220]",
+};
 
 export default function Home() {
   const whatsappNumber = "5551991908369";
@@ -13,12 +19,11 @@ export default function Home() {
 
   const [showSplash, setShowSplash] = useState(true);
 
-  // Opcional: mostrar a abertura só 1x por dia
+  // mostra a abertura só 1x por dia
   useEffect(() => {
     const key = "acmn_splash_last";
     const last = localStorage.getItem(key);
     const today = new Date().toISOString().slice(0, 10);
-
     if (last === today) setShowSplash(false);
   }, []);
 
@@ -37,11 +42,19 @@ export default function Home() {
         {/* Top bar */}
         <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-            <div className="flex items-center gap-2">
-              <div className="h-9 w-9 rounded-xl bg-neutral-900" />
-              <div className="leading-tight">
-                <div className="text-sm font-semibold">Grupo ACMN</div>
-                <div className="text-xs text-neutral-500">Porto Alegre • RS</div>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Grupo ACMN"
+                width={200}
+                height={60}
+                className="h-8 w-auto"
+                priority
+              />
+              <div className="hidden leading-tight sm:block">
+                <div className="text-xs text-neutral-500">
+                  Porto Alegre • RS
+                </div>
               </div>
             </div>
 
@@ -62,7 +75,7 @@ export default function Home() {
 
             <a
               href={waLink}
-              className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+              className={`rounded-xl px-4 py-2 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
             >
               Falar no WhatsApp
             </a>
@@ -73,7 +86,7 @@ export default function Home() {
         <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <div>
-              <p className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-neutral-700">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs text-neutral-700">
                 Atendimento humano • Processo guiado • Rápido
               </p>
 
@@ -91,7 +104,7 @@ export default function Home() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
                   href={waLink}
-                  className="rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
+                  className={`rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
                 >
                   Quero atendimento no WhatsApp
                 </a>
@@ -127,7 +140,7 @@ export default function Home() {
 
                 <a
                   href={waLink}
-                  className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
+                  className={`mt-5 inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
                 >
                   Iniciar conversa
                 </a>
@@ -153,16 +166,19 @@ export default function Home() {
                 title="Conta PJ (Cora)"
                 desc="Orientação completa para abertura e organização do processo."
                 tag="Disponível"
+                brand
               />
               <Card
                 title="Conta MEI em 3 min"
                 desc="Passo a passo para você abrir sua conta com agilidade."
                 tag="Disponível"
+                brand
               />
               <Card
                 title="Capital para PJ"
                 desc="Soluções para organizar caixa, planejar e crescer com segurança."
                 tag="Disponível"
+                brand
               />
               <Card
                 title="Consórcio"
@@ -184,7 +200,7 @@ export default function Home() {
                 </p>
                 <a
                   href={waLink}
-                  className="mt-4 inline-flex rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800"
+                  className={`mt-4 inline-flex rounded-xl px-4 py-2 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
                 >
                   Falar agora
                 </a>
@@ -246,8 +262,8 @@ export default function Home() {
               <div>
                 <h2 className="text-2xl font-semibold">Contato</h2>
                 <p className="mt-2 text-neutral-600">
-                  Prefere que a gente te chame? Preencha abaixo. Ao enviar,
-                  abrimos o WhatsApp com sua mensagem pronta.
+                  Prefere que a gente te chame? Preencha abaixo. Ao enviar, abrimos
+                  o WhatsApp com sua mensagem pronta.
                 </p>
 
                 <div className="mt-5 rounded-2xl border bg-white p-6">
@@ -303,7 +319,7 @@ export default function Home() {
 
                     <button
                       type="submit"
-                      className="mt-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
+                      className={`mt-2 rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
                     >
                       Enviar e abrir WhatsApp
                     </button>
@@ -324,16 +340,13 @@ export default function Home() {
 
                 <div className="mt-6 grid gap-3">
                   <InfoRow title="WhatsApp" value="+55 (51) 99190-8369" />
-                  <InfoRow
-                    title="Serviços"
-                    value="Conta PJ • MEI • Capital PJ"
-                  />
+                  <InfoRow title="Serviços" value="Conta PJ • MEI • Capital PJ" />
                   <InfoRow title="Em breve" value="Consórcio • Imóvel" />
                 </div>
 
                 <a
                   href={waLink}
-                  className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800"
+                  className={`mt-6 inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
                 >
                   Falar agora no WhatsApp
                 </a>
@@ -350,7 +363,7 @@ export default function Home() {
         {/* Floating WhatsApp */}
         <a
           href={waLink}
-          className="fixed bottom-5 right-5 rounded-full bg-neutral-900 px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-neutral-800"
+          className={`fixed bottom-5 right-5 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg ${BRAND.primary} ${BRAND.primaryHover}`}
         >
           WhatsApp
         </a>
@@ -373,11 +386,13 @@ function Card({
   desc,
   tag,
   muted,
+  brand,
 }: {
   title: string;
   desc: string;
   tag: string;
   muted?: boolean;
+  brand?: boolean;
 }) {
   return (
     <div
@@ -391,9 +406,7 @@ function Card({
         <span
           className={
             "rounded-full px-3 py-1 text-xs " +
-            (muted
-              ? "bg-neutral-200 text-neutral-700"
-              : "bg-neutral-900 text-white")
+            (brand && !muted ? "bg-[#101828] text-white" : "bg-neutral-200 text-neutral-700")
           }
         >
           {tag}
@@ -407,7 +420,7 @@ function Card({
 function Step({ n, title, desc }: { n: string; title: string; desc: string }) {
   return (
     <div className="rounded-2xl border bg-white p-6">
-      <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-sm font-semibold text-white">
+      <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#101828] text-sm font-semibold text-white">
         {n}
       </div>
       <div className="mt-3 text-sm font-semibold">{title}</div>
