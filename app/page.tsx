@@ -1,25 +1,53 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SplashIntro from "../components/SplashIntro";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 
 const BRAND = {
-  primary: "bg-[#101828]",
-  primaryHover: "hover:bg-[#0b1220]",
+  navy: "#101828",
+  blue: "#2563eb",
 };
+
+const areaData = [
+  { name: "Seg", v: 18 },
+  { name: "Ter", v: 22 },
+  { name: "Qua", v: 28 },
+  { name: "Qui", v: 26 },
+  { name: "Sex", v: 34 },
+  { name: "Sáb", v: 32 },
+  { name: "Dom", v: 38 },
+];
+
+const barData = [
+  { name: "Conta PJ", v: 42 },
+  { name: "MEI", v: 58 },
+  { name: "Capital", v: 31 },
+  { name: "Consórcio", v: 16 },
+  { name: "Imóvel", v: 12 },
+];
 
 export default function Home() {
   const whatsappNumber = "5551991908369";
-  const whatsappText =
-    "Olá! Vim pelo site do Grupo ACMN e quero atendimento para minha empresa.";
-  const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    whatsappText
-  )}`;
+  const waLink = useMemo(() => {
+    const text =
+      "Olá! Vim pelo site do Grupo ACMN e quero atendimento para minha empresa.";
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+  }, []);
 
   const [showSplash, setShowSplash] = useState(true);
 
-  // mostra a abertura só 1x por dia
+  // splash 1x por dia
   useEffect(() => {
     const key = "acmn_splash_last";
     const last = localStorage.getItem(key);
@@ -39,8 +67,8 @@ export default function Home() {
       {showSplash && <SplashIntro onDone={onDone} />}
 
       <main className="min-h-screen bg-white text-neutral-900">
-        {/* Top bar */}
-        <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
+        {/* Header */}
+        <header className="sticky top-0 z-50 border-b bg-white/70 backdrop-blur">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
             <div className="flex items-center gap-3">
               <Image
@@ -51,22 +79,20 @@ export default function Home() {
                 className="h-8 w-auto"
                 priority
               />
-              <div className="hidden leading-tight sm:block">
-                <div className="text-xs text-neutral-500">
-                  Porto Alegre • RS
-                </div>
-              </div>
+              <span className="hidden text-xs text-neutral-500 sm:block">
+                Porto Alegre • RS
+              </span>
             </div>
 
             <nav className="hidden items-center gap-6 text-sm text-neutral-700 md:flex">
-              <a className="hover:text-neutral-900" href="#servicos">
-                Serviços
+              <a className="hover:text-neutral-900" href="#solucoes">
+                Soluções
               </a>
               <a className="hover:text-neutral-900" href="#como-funciona">
                 Como funciona
               </a>
-              <a className="hover:text-neutral-900" href="#faq">
-                Dúvidas
+              <a className="hover:text-neutral-900" href="#beneficios">
+                Benefícios
               </a>
               <a className="hover:text-neutral-900" href="#contato">
                 Contato
@@ -75,132 +101,199 @@ export default function Home() {
 
             <a
               href={waLink}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
+              className="rounded-2xl bg-[#101828] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b1220]"
             >
               Falar no WhatsApp
             </a>
           </div>
         </header>
 
-        {/* Hero */}
-        <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
-          <div className="grid items-center gap-10 md:grid-cols-2">
-            <div>
-              <p className="mb-3 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs text-neutral-700">
-                Atendimento humano • Processo guiado • Rápido
-              </p>
+        {/* Hero SaaS */}
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(37,99,235,0.14),transparent_40%),radial-gradient(circle_at_90%_10%,rgba(16,24,40,0.10),transparent_35%),radial-gradient(circle_at_40%_90%,rgba(37,99,235,0.10),transparent_40%)]" />
+          <div className="relative mx-auto max-w-6xl px-5 py-16 md:py-24">
+            <div className="grid items-center gap-10 md:grid-cols-2">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border bg-white/70 px-3 py-1 text-xs text-neutral-700">
+                  <span className="h-2 w-2 rounded-full bg-blue-600" />
+                  Atendimento humano • Processo guiado • Rápido
+                </div>
 
-              <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                Ajudamos sua empresa a crescer.
-              </h1>
+                <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-5xl">
+                  Um jeito mais simples de fazer sua empresa crescer.
+                </h1>
 
-              <p className="mt-4 text-lg text-neutral-600">
-                Conta PJ com orientação completa, abertura de conta MEI em até{" "}
-                <span className="font-semibold text-neutral-900">3 minutos</span>{" "}
-                e soluções de capital para o seu CNPJ — com atendimento direto e
-                seguro.
-              </p>
+                <p className="mt-4 text-lg text-neutral-600">
+                  Conta PJ com orientação completa,{" "}
+                  <span className="font-semibold text-neutral-900">
+                    Conta MEI em 3 min
+                  </span>{" "}
+                  e soluções de capital para o seu CNPJ — com atendimento direto
+                  e objetivo.
+                </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href={waLink}
-                  className={`rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
-                >
-                  Quero atendimento no WhatsApp
-                </a>
-                <a
-                  href="#contato"
-                  className="rounded-xl border px-5 py-3 text-sm font-semibold hover:bg-neutral-50"
-                >
-                  Prefiro preencher o formulário
-                </a>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a
+                    href={waLink}
+                    className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                  >
+                    Quero atendimento
+                  </a>
+                  <a
+                    href="#solucoes"
+                    className="rounded-2xl border bg-white/70 px-5 py-3 text-sm font-semibold hover:bg-white"
+                  >
+                    Ver soluções
+                  </a>
+                </div>
+
+                <div className="mt-10 flex flex-wrap gap-2 text-xs text-neutral-600">
+                  <Chip>Conta PJ (Cora)</Chip>
+                  <Chip>MEI em 3 min</Chip>
+                  <Chip>Capital para PJ</Chip>
+                  <Chip muted>Consórcio (em breve)</Chip>
+                  <Chip muted>Imóvel (em breve)</Chip>
+                </div>
+
+                <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                  <MiniStat title="Rápido" value="3 min" desc="para MEI" />
+                  <MiniStat title="Foco" value="PJ" desc="CNPJ e MEI" />
+                  <MiniStat title="Suporte" value="Humano" desc="sem robô" />
+                </div>
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <Stat title="Foco em PJ" desc="Atendimento para CNPJ e MEI" />
-                <Stat title="Rápido" desc="Orientação prática, sem enrolação" />
-                <Stat
-                  title="Organizado"
-                  desc="Processo e próximos passos claros"
-                />
+              {/* Dashboard mock */}
+              <div className="relative">
+                <div className="rounded-3xl border bg-white/70 p-6 shadow-sm backdrop-blur">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold">
+                        Performance da semana
+                      </div>
+                      <div className="mt-1 text-xs text-neutral-500">
+                        Exemplo visual (dashboard)
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                      +18%
+                    </span>
+                  </div>
+
+                  <div className="mt-5 h-40 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={areaData}>
+                        <XAxis dataKey="name" hide />
+                        <YAxis hide />
+                        <Tooltip
+                          contentStyle={{
+                            borderRadius: 12,
+                            border: "1px solid #e5e7eb",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="v"
+                          stroke={BRAND.blue}
+                          fill={BRAND.blue}
+                          fillOpacity={0.15}
+                          strokeWidth={2}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 md:grid-cols-2">
+                    <Kpi title="Leads" value="124" note="na semana" />
+                    <Kpi title="Conversão" value="18%" note="crescendo" />
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-3xl border bg-white p-6 shadow-sm">
+                  <div className="text-sm font-semibold">
+                    Interesses por solução
+                  </div>
+                  <div className="mt-4 h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={barData}>
+                        <XAxis dataKey="name" hide />
+                        <YAxis hide />
+                        <Tooltip
+                          contentStyle={{
+                            borderRadius: 12,
+                            border: "1px solid #e5e7eb",
+                            fontSize: 12,
+                          }}
+                        />
+                        <Bar dataKey="v" fill={BRAND.navy} radius={[10, 10, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <p className="mt-2 text-xs text-neutral-500">
+                    Visual estilo SaaS (dados ilustrativos)
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="rounded-3xl border bg-neutral-50 p-6 shadow-sm">
-              <div className="rounded-2xl bg-white p-5">
-                <div className="text-sm font-semibold">Atendimento rápido</div>
-                <p className="mt-2 text-sm text-neutral-600">
-                  Clique no botão e já comece com uma mensagem pronta. Se
-                  preferir, preencha o formulário e nós chamamos você.
-                </p>
-                <div className="mt-4 rounded-xl border bg-neutral-50 p-4 text-sm text-neutral-700">
-                  <div className="font-semibold">WhatsApp:</div>
-                  <div className="mt-1 select-all">+55 (51) 99190-8369</div>
-                </div>
-
-                <a
-                  href={waLink}
-                  className={`mt-5 inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
-                >
-                  Iniciar conversa
-                </a>
-
-                <p className="mt-3 text-center text-xs text-neutral-500">
-                  Porto Alegre • RS — atendimento também online
-                </p>
-              </div>
+            <div className="mt-12 flex flex-wrap items-center gap-6 text-sm text-neutral-500">
+              <span className="font-semibold text-neutral-700">
+                Usado por empresas em crescimento
+              </span>
+              <span>•</span>
+              <span>Processo guiado</span>
+              <span>•</span>
+              <span>Atendimento rápido</span>
+              <span>•</span>
+              <span>Online e Porto Alegre</span>
             </div>
           </div>
         </section>
 
-        {/* Serviços */}
-        <section id="servicos" className="border-t bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-14">
-            <h2 className="text-2xl font-semibold">Serviços</h2>
+        {/* Soluções */}
+        <section id="solucoes" className="border-t bg-white">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <h2 className="text-2xl font-semibold tracking-tight">Soluções</h2>
             <p className="mt-2 text-neutral-600">
-              Blocos claros para você escolher o que precisa agora.
+              Escolha o que sua empresa precisa agora.
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-3">
-              <Card
+              <SolutionCard
                 title="Conta PJ (Cora)"
                 desc="Orientação completa para abertura e organização do processo."
-                tag="Disponível"
-                brand
+                badge="Disponível"
               />
-              <Card
+              <SolutionCard
                 title="Conta MEI em 3 min"
-                desc="Passo a passo para você abrir sua conta com agilidade."
-                tag="Disponível"
-                brand
+                desc="Passo a passo simples para você abrir sua conta com agilidade."
+                badge="Disponível"
               />
-              <Card
+              <SolutionCard
                 title="Capital para PJ"
-                desc="Soluções para organizar caixa, planejar e crescer com segurança."
-                tag="Disponível"
-                brand
+                desc="Opções para organizar caixa, planejar e crescer com segurança."
+                badge="Disponível"
               />
-              <Card
+              <SolutionCard
                 title="Consórcio"
-                desc="Estratégia de compra planejada para patrimônio e crescimento."
-                tag="Em breve"
+                desc="Estratégia planejada para compra e crescimento."
+                badge="Em breve"
                 muted
               />
-              <Card
+              <SolutionCard
                 title="Imóvel"
-                desc="Oportunidades e suporte no processo (compra/planejamento)."
-                tag="Em breve"
+                desc="Oportunidades e suporte no processo."
+                badge="Em breve"
                 muted
               />
-              <div className="rounded-2xl border bg-neutral-50 p-6">
+              <div className="rounded-3xl border bg-neutral-50 p-7">
                 <div className="text-sm font-semibold">Quer prioridade?</div>
                 <p className="mt-2 text-sm text-neutral-600">
-                  Chame no WhatsApp e diga o objetivo: Conta PJ, MEI, capital,
-                  consórcio ou imóvel.
+                  Chame no WhatsApp e diga o objetivo.
                 </p>
                 <a
                   href={waLink}
-                  className={`mt-4 inline-flex rounded-xl px-4 py-2 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
+                  className="mt-4 inline-flex rounded-2xl bg-[#101828] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b1220]"
                 >
                   Falar agora
                 </a>
@@ -211,147 +304,141 @@ export default function Home() {
 
         {/* Como funciona */}
         <section id="como-funciona" className="border-t bg-neutral-50">
-          <div className="mx-auto max-w-6xl px-5 py-14">
-            <h2 className="text-2xl font-semibold">Como funciona</h2>
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Como funciona
+            </h2>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
-              <Step
+              <StepCard
                 n="1"
-                title="Contato rápido"
+                title="Contato"
                 desc="Você chama no WhatsApp ou preenche o formulário."
               />
-              <Step
+              <StepCard
                 n="2"
-                title="Entendemos seu momento"
-                desc="Coletamos as informações essenciais e definimos o caminho ideal."
+                title="Diagnóstico"
+                desc="Entendemos seu momento e definimos o caminho ideal."
               />
-              <Step
+              <StepCard
                 n="3"
-                title="Próximo passo claro"
+                title="Ação"
                 desc="Você segue com orientação prática e acompanhamento."
               />
             </div>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="border-t bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-14">
-            <h2 className="text-2xl font-semibold">Dúvidas frequentes</h2>
+        {/* Benefícios */}
+        <section id="beneficios" className="border-t bg-white">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              Por que o Grupo ACMN
+            </h2>
+            <p className="mt-2 text-neutral-600">
+              Visual clean, processo claro e atendimento rápido.
+            </p>
 
-            <div className="mt-6 grid gap-3">
-              <Faq
-                q="É atendimento humano?"
-                a="Sim. Você fala com um especialista e recebe orientação direta."
-              />
-              <Faq
-                q="Atendem só Porto Alegre?"
-                a="Atendemos Porto Alegre e região, e também online."
-              />
-              <Faq
-                q="Consórcio e imóvel já estão disponíveis?"
-                a="Estão em breve. Se você chamar no WhatsApp, podemos anotar seu interesse e te avisar."
-              />
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <Benefit title="Clareza" desc="Você entende o próximo passo." />
+              <Benefit title="Velocidade" desc="MEI em até 3 minutos." />
+              <Benefit title="Confiança" desc="Atendimento humano e direto." />
             </div>
           </div>
         </section>
 
-        {/* Contato / Form */}
+        {/* Contato */}
         <section id="contato" className="border-t bg-neutral-50">
-          <div className="mx-auto max-w-6xl px-5 py-14">
+          <div className="mx-auto max-w-6xl px-5 py-16">
             <div className="grid gap-8 md:grid-cols-2">
-              <div>
-                <h2 className="text-2xl font-semibold">Contato</h2>
-                <p className="mt-2 text-neutral-600">
-                  Prefere que a gente te chame? Preencha abaixo. Ao enviar, abrimos
-                  o WhatsApp com sua mensagem pronta.
+              <div className="rounded-3xl border bg-white p-7 shadow-sm">
+                <div className="text-sm font-semibold">Contato</div>
+                <p className="mt-2 text-sm text-neutral-600">
+                  Ao enviar, abrimos o WhatsApp com a mensagem pronta.
                 </p>
 
-                <div className="mt-5 rounded-2xl border bg-white p-6">
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      const form = e.currentTarget as HTMLFormElement;
-                      const data = new FormData(form);
+                <form
+                  className="mt-5 grid gap-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget as HTMLFormElement;
+                    const data = new FormData(form);
 
-                      const nome = String(data.get("nome") || "").trim();
-                      const whatsapp = String(data.get("whatsapp") || "").trim();
-                      const empresa = String(data.get("empresa") || "").trim();
-                      const objetivo = String(data.get("objetivo") || "").trim();
+                    const nome = String(data.get("nome") || "").trim();
+                    const whatsapp = String(data.get("whatsapp") || "").trim();
+                    const objetivo = String(data.get("objetivo") || "").trim();
 
-                      const msg =
-                        `Olá! Meu nome é ${nome || "—"}. ` +
-                        `Empresa: ${empresa || "—"}. ` +
-                        `WhatsApp: ${whatsapp || "—"}. ` +
-                        `Objetivo: ${objetivo || "—"}. ` +
-                        `Vim pelo site do Grupo ACMN.`;
+                    const msg =
+                      `Olá! Meu nome é ${nome || "—"}. ` +
+                      `WhatsApp: ${whatsapp || "—"}. ` +
+                      `Objetivo: ${objetivo || "—"}. ` +
+                      `Vim pelo site do Grupo ACMN.`;
 
-                      window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                        msg
-                      )}`;
-                    }}
-                    className="grid gap-3"
-                  >
-                    <Input name="nome" label="Seu nome" placeholder="Ex: Ana" />
-                    <Input
+                    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                      msg
+                    )}`;
+                  }}
+                >
+                  <Field label="Seu nome">
+                    <input
+                      name="nome"
+                      placeholder="Ex: Ana"
+                      className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                  </Field>
+                  <Field label="Seu WhatsApp">
+                    <input
                       name="whatsapp"
-                      label="Seu WhatsApp"
                       placeholder="Ex: (51) 99999-9999"
+                      className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-200"
                     />
-                    <Input
-                      name="empresa"
-                      label="Empresa (opcional)"
-                      placeholder="Ex: Minha Empresa LTDA"
-                    />
-                    <div className="grid gap-1">
-                      <label className="text-sm font-medium">Objetivo</label>
-                      <select
-                        name="objetivo"
-                        className="rounded-xl border px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-neutral-300"
-                        defaultValue="Conta PJ (Cora)"
-                      >
-                        <option>Conta PJ (Cora)</option>
-                        <option>Conta MEI em 3 min</option>
-                        <option>Capital para PJ</option>
-                        <option>Consórcio (em breve)</option>
-                        <option>Imóvel (em breve)</option>
-                      </select>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className={`mt-2 rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
+                  </Field>
+                  <Field label="Objetivo">
+                    <select
+                      name="objetivo"
+                      defaultValue="Conta PJ (Cora)"
+                      className="w-full rounded-2xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-200"
                     >
-                      Enviar e abrir WhatsApp
-                    </button>
+                      <option>Conta PJ (Cora)</option>
+                      <option>Conta MEI em 3 min</option>
+                      <option>Capital para PJ</option>
+                      <option>Consórcio (em breve)</option>
+                      <option>Imóvel (em breve)</option>
+                    </select>
+                  </Field>
 
-                    <p className="text-xs text-neutral-500">
-                      Ao enviar, você será direcionado para o WhatsApp com a
-                      mensagem preenchida.
-                    </p>
-                  </form>
-                </div>
+                  <button
+                    className="mt-2 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                    type="submit"
+                  >
+                    Enviar e abrir WhatsApp
+                  </button>
+
+                  <p className="text-xs text-neutral-500">
+                    Você será redirecionado para o WhatsApp.
+                  </p>
+                </form>
               </div>
 
-              <div className="rounded-3xl border bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border bg-white p-7 shadow-sm">
                 <div className="text-sm font-semibold">Grupo ACMN</div>
-                <p className="mt-2 text-sm text-neutral-600">
+                <div className="mt-2 text-sm text-neutral-600">
                   Porto Alegre - Rio Grande do Sul
-                </p>
+                </div>
 
                 <div className="mt-6 grid gap-3">
                   <InfoRow title="WhatsApp" value="+55 (51) 99190-8369" />
-                  <InfoRow title="Serviços" value="Conta PJ • MEI • Capital PJ" />
+                  <InfoRow title="Disponível" value="Conta PJ • MEI • Capital PJ" />
                   <InfoRow title="Em breve" value="Consórcio • Imóvel" />
                 </div>
 
                 <a
                   href={waLink}
-                  className={`mt-6 inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white ${BRAND.primary} ${BRAND.primaryHover}`}
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-[#101828] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0b1220]"
                 >
-                  Falar agora no WhatsApp
+                  Falar agora
                 </a>
 
-                <p className="mt-4 text-xs text-neutral-500">
+                <p className="mt-5 text-xs text-neutral-500">
                   © {new Date().getFullYear()} Grupo ACMN — Todos os direitos
                   reservados.
                 </p>
@@ -363,7 +450,7 @@ export default function Home() {
         {/* Floating WhatsApp */}
         <a
           href={waLink}
-          className={`fixed bottom-5 right-5 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-lg ${BRAND.primary} ${BRAND.primaryHover}`}
+          className="fixed bottom-5 right-5 rounded-full bg-[#101828] px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[#0b1220]"
         >
           WhatsApp
         </a>
@@ -372,98 +459,128 @@ export default function Home() {
   );
 }
 
-function Stat({ title, desc }: { title: string; desc: string }) {
+function Chip({ children, muted }: { children: React.ReactNode; muted?: boolean }) {
   return (
-    <div className="rounded-2xl border bg-white p-4">
-      <div className="text-sm font-semibold">{title}</div>
+    <span
+      className={
+        "rounded-full border px-3 py-1 " +
+        (muted ? "bg-neutral-50 text-neutral-500" : "bg-white text-neutral-700")
+      }
+    >
+      {children}
+    </span>
+  );
+}
+
+function MiniStat({
+  title,
+  value,
+  desc,
+}: {
+  title: string;
+  value: string;
+  desc: string;
+}) {
+  return (
+    <div className="rounded-3xl border bg-white/70 p-4 backdrop-blur">
+      <div className="text-xs font-semibold text-neutral-700">{title}</div>
+      <div className="mt-1 text-2xl font-semibold tracking-tight">{value}</div>
       <div className="mt-1 text-xs text-neutral-600">{desc}</div>
     </div>
   );
 }
 
-function Card({
+function Kpi({ title, value, note }: { title: string; value: string; note: string }) {
+  return (
+    <div className="rounded-2xl border bg-white p-4">
+      <div className="text-xs text-neutral-500">{title}</div>
+      <div className="mt-1 text-lg font-semibold">{value}</div>
+      <div className="mt-1 text-xs text-neutral-500">{note}</div>
+    </div>
+  );
+}
+
+function SolutionCard({
   title,
   desc,
-  tag,
+  badge,
   muted,
-  brand,
 }: {
   title: string;
   desc: string;
-  tag: string;
+  badge: string;
   muted?: boolean;
-  brand?: boolean;
 }) {
   return (
     <div
       className={
-        "rounded-2xl border p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md " +
+        "rounded-3xl border p-7 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md " +
         (muted ? "bg-neutral-50" : "bg-white")
       }
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
         <div className="text-sm font-semibold">{title}</div>
         <span
           className={
-            "rounded-full px-3 py-1 text-xs " +
-            (brand && !muted ? "bg-[#101828] text-white" : "bg-neutral-200 text-neutral-700")
+            "rounded-full px-3 py-1 text-xs font-semibold " +
+            (badge === "Disponível"
+              ? "bg-blue-600 text-white"
+              : "bg-neutral-200 text-neutral-700")
           }
         >
-          {tag}
+          {badge}
         </span>
       </div>
-      <p className="mt-2 text-sm text-neutral-600">{desc}</p>
+      <p className="mt-3 text-sm text-neutral-600">{desc}</p>
+      <div className="mt-6 h-[1px] w-full bg-neutral-200/70" />
+      <p className="mt-4 text-xs text-neutral-500">
+        {badge === "Disponível" ? "Pronto para iniciar." : "Em breve disponível."}
+      </p>
     </div>
   );
 }
 
-function Step({ n, title, desc }: { n: string; title: string; desc: string }) {
+function StepCard({
+  n,
+  title,
+  desc,
+}: {
+  n: string;
+  title: string;
+  desc: string;
+}) {
   return (
-    <div className="rounded-2xl border bg-white p-6">
-      <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#101828] text-sm font-semibold text-white">
+    <div className="rounded-3xl border bg-white p-7 shadow-sm">
+      <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#101828] text-sm font-semibold text-white">
         {n}
       </div>
-      <div className="mt-3 text-sm font-semibold">{title}</div>
+      <div className="mt-4 text-sm font-semibold">{title}</div>
       <p className="mt-2 text-sm text-neutral-600">{desc}</p>
     </div>
   );
 }
 
-function Faq({ q, a }: { q: string; a: string }) {
+function Benefit({ title, desc }: { title: string; desc: string }) {
   return (
-    <details className="rounded-2xl border bg-white p-5">
-      <summary className="cursor-pointer list-none text-sm font-semibold">
-        {q}
-      </summary>
-      <p className="mt-3 text-sm text-neutral-600">{a}</p>
-    </details>
+    <div className="rounded-3xl border bg-white p-7 shadow-sm">
+      <div className="text-sm font-semibold">{title}</div>
+      <p className="mt-2 text-sm text-neutral-600">{desc}</p>
+    </div>
   );
 }
 
-function Input({
-  name,
-  label,
-  placeholder,
-}: {
-  name: string;
-  label: string;
-  placeholder: string;
-}) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="grid gap-1">
       <label className="text-sm font-medium">{label}</label>
-      <input
-        name={name}
-        placeholder={placeholder}
-        className="rounded-xl border px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-neutral-300"
-      />
+      {children}
     </div>
   );
 }
 
 function InfoRow({ title, value }: { title: string; value: string }) {
   return (
-    <div className="rounded-2xl border bg-neutral-50 p-4">
+    <div className="rounded-3xl border bg-neutral-50 p-5">
       <div className="text-xs font-semibold text-neutral-700">{title}</div>
       <div className="mt-1 text-sm text-neutral-900">{value}</div>
     </div>
